@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>哆啦A夢風格迷因產生器</title>
+    <!-- 引入 Tailwind CSS 快速建立美觀響應式排版 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts: M PLUS Rounded 1c (圓體，呈現日系童趣風格) -->
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800;900&display=swap" rel="stylesheet">
+    <!-- 引入 html2canvas CDN 用於截圖下載 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* 套用 Google 圓體字型，營造可愛、童趣、哆啦A夢的漫畫氛圍 */
+        body {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: #EBF5FB; /* 哆啦A夢晴空藍柔和背景 */
+            color: #2C3E50;
+        }
+        /* 迷因文字的強力黑色粗邊框 (text-shadow)，確保在任何底圖上皆清晰易讀 */
+        .meme-text {
+            text-shadow: 
+                -2px -2px 0 #000,  
+                 2px -2px 0 #000,
+                -2px  2px 0 #000,
+                 2px  2px 0 #000,
+                 0px  4px 8px rgba(0, 0, 0, 0.6);
+        }
+        /* 哆啦A夢風格裝飾紅圈 */
+        .dora-badge {
+            background-color: #E74C3C;
+            color: white;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8">
+
+    <!-- 頁面標題區 -->
+    <header class="text-center mb-6">
+        <div class="inline-flex items-center space-x-2 bg-white px-4 py-1.5 rounded-full shadow-sm border border-[#AED6F1] mb-2">
+            <span class="w-3 h-3 rounded-full bg-[#E74C3C] inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-[#F1C40F] inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-[#3498DB] inline-block"></span>
+            <span class="text-xs font-bold text-[#3498DB]">秘密道具迷因製造機</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-wide text-[#1B4F72]">🔔 哆啦A夢迷因產生器</h1>
+        <p class="text-sm text-[#5DADE2] mt-1 font-semibold">「像這樣……把你的創意變成大家的百寶袋歡樂泉源！」</p>
+    </header>
+
+    <!-- 主內容區塊：RWD 網格排版 -->
+    <main class="w-full max-w-5xl bg-white/95 backdrop-blur-md shadow-2xl rounded-3xl p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 border-4 border-[#AED6F1]">
+        
+        <!-- 左側：控制面板區 (佔 5 格) -->
+        <section class="lg:col-span-5 flex flex-col justify-between space-y-6">
+            <div class="space-y-4">
+                
+                <!-- 1. 圖片上傳區 (使用 input type="file" 與 FileReader 確保本機上傳正確) -->
+                <div>
+                    <label class="block text-sm font-bold text-[#1B4F72] mb-1.5 flex items-center">
+                        <span class="dora-badge w-5 h-5 rounded-full inline-flex items-center justify-center text-xs mr-1.5">1</span> 選擇底圖
+                    </label>
+                    <input type="file" id="imageUpload" accept="image/*" 
+                        class="block w-full text-sm text-[#5DADE2]
+                        file:mr-4 file:py-2.5 file:px-4
+                        file:rounded-full file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-[#EBF5FB] file:text-[#2980B9]
+                        hover:file:bg-[#D4E6F1] cursor-pointer transition">
+                </div>
+
+                <!-- 2. 上方文字輸入 -->
+                <div>
+                    <label for="topTextInput" class="block text-sm font-bold text-[#1B4F72] mb-1">上方文字</label>
+                    <input type="text" id="topTextInput" placeholder="輸入上方文字..." value="當你偷看大雄的日記"
+                        class="w-full px-4 py-2.5 rounded-xl border-2 border-[#AED6F1] bg-[#F4F9FC] focus:outline-none focus:border-[#3498DB] transition font-medium">
+                </div>
+
+                <!-- 3. 下方文字輸入 -->
+                <div>
+                    <label for="bottomTextInput" class="block text-sm font-bold text-[#1B4F72] mb-1">下方文字</label>
+                    <input type="text" id="bottomTextInput" placeholder="輸入下方文字..." value="結果發現全部都是空白"
+                        class="w-full px-4 py-2.5 rounded-xl border-2 border-[#AED6F1] bg-[#F4F9FC] focus:outline-none focus:border-[#3498DB] transition font-medium">
+                </div>
+
+                <!-- 4. 文字顏色選擇區 -->
+                <div>
+                    <label for="textColorPicker" class="block text-sm font-bold text-[#1B4F72] mb-1">文字顏色</label>
+                    <div class="flex items-center space-x-3 bg-[#F4F9FC] border-2 border-[#AED6F1] px-4 py-2 rounded-xl">
+                        <input type="color" id="textColorPicker" value="#ffffff" 
+                            class="w-8 h-8 rounded-lg border-0 cursor-pointer bg-transparent">
+                        <span id="colorHexText" class="text-xs font-bold text-[#2980B9]">#FFFFFF (預設白色)</span>
+                    </div>
+                </div>
+
+                <!-- 5. 參數滑桿控制區 -->
+                <div class="space-y-3 pt-2 border-t-2 border-[#EBF5FB]">
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-[#2980B9] mb-1">
+                            <span>字體大小</span>
+                            <span id="fontSizeValue">32px</span>
+                        </div>
+                        <input type="range" id="fontSizeRange" min="16" max="64" value="32" 
+                            class="w-full accent-[#3498DB] cursor-pointer">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-[#2980B9] mb-1">
+                            <span>上方文字垂直位置</span>
+                            <span id="topPosValue">5%</span>
+                        </div>
+                        <input type="range" id="topPosRange" min="0" max="85" value="5" 
+                            class="w-full accent-[#3498DB] cursor-pointer">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-[#2980B9] mb-1">
+                            <span>下方文字垂直位置</span>
+                            <span id="bottomPosValue">85%</span>
+                        </div>
+                        <input type="range" id="bottomPosRange" min="10" max="95" value="85" 
+                            class="w-full accent-[#3498DB] cursor-pointer">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 6. 一鍵下載按鈕 -->
+            <button id="downloadBtn" 
+                class="w-full py-3.5 px-6 rounded-2xl bg-[#F1C40F] hover:bg-[#F39C12] text-[#7D6608] font-black tracking-wide shadow-lg transition transform active:scale-95 flex items-center justify-center space-x-2 border-b-4 border-[#D4AC0D]">
+                <span>🔔 取出百寶袋：下載迷因圖！</span>
+            </button>
+        </section>
+
+        <!-- 右側：迷因即時預覽區 (佔 7 格) -->
+        <section class="lg:col-span-7 flex items-center justify-center bg-[#EBF5FB] border-4 border-dashed border-[#85C1E9] rounded-2xl p-4 overflow-hidden min-h-[350px]">
+            <!-- 截圖包裝容器 -->
+            <div id="memeContainer" class="relative inline-block max-w-full rounded-xl overflow-hidden shadow-md bg-white">
+                <!-- 底圖：加上 block 與 max-h 確保圖片穩定呈現 -->
+                <img id="memeImage" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" 
+                    alt="迷因底圖預覽" class="block max-h-[480px] w-auto object-contain">
+                
+                <!-- 上方文字 -->
+                <div id="topTextDisplay" class="meme-text absolute left-4 right-4 text-center font-black uppercase px-2 break-words pointer-events-none" style="top: 5%; font-size: 32px; color: #ffffff;">
+                    當你偷看大雄的日記
+                </div>
+
+                <!-- 下方文字 -->
+                <div id="bottomTextDisplay" class="meme-text absolute left-4 right-4 text-center font-black uppercase px-2 break-words pointer-events-none" style="top: 85%; font-size: 32px; color: #ffffff;">
+                    結果發現全部都是空白
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 頁尾 -->
+    <footer class="mt-8 text-xs font-semibold text-[#5DADE2]">
+        &copy; 2026 哆啦A夢風格迷因產生器. All rights reserved.
+    </footer>
+
+    <!-- JavaScript 互動邏輯 -->
+    <script>
+        // 取得 DOM 元素
+        const imageUpload = document.getElementById('imageUpload');
+        const memeImage = document.getElementById('memeImage');
+        const topTextInput = document.getElementById('topTextInput');
+        const bottomTextInput = document.getElementById('bottomTextInput');
+        const topTextDisplay = document.getElementById('topTextDisplay');
+        const bottomTextDisplay = document.getElementById('bottomTextDisplay');
+        
+        const textColorPicker = document.getElementById('textColorPicker');
+        const colorHexText = document.getElementById('colorHexText');
+        
+        const fontSizeRange = document.getElementById('fontSizeRange');
+        const fontSizeValue = document.getElementById('fontSizeValue');
+        const topPosRange = document.getElementById('topPosRange');
+        const topPosValue = document.getElementById('topPosValue');
+        const bottomPosRange = document.getElementById('bottomPosRange');
+        const bottomPosValue = document.getElementById('bottomPosValue');
+        
+        const downloadBtn = document.getElementById('downloadBtn');
+        const memeContainer = document.getElementById('memeContainer');
+
+        // 1. 本機圖片上傳與 FileReader 讀取邏輯 (確保能正確替換圖片)
+        imageUpload.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    memeImage.src = e.target.result; // 將上傳的圖片資料賦值給 img 標籤
+                };
+                reader.readAsDataURL(file); // 讀取為 Base64 格式
+            }
+        });
+
+        // 2. 即時連動：上方文字
+        topTextInput.addEventListener('input', function() {
+            topTextDisplay.textContent = this.value || '當你偷看大雄的日記';
+        });
+
+        // 3. 即時連動：下方文字
+        bottomTextInput.addEventListener('input', function() {
+            bottomTextDisplay.textContent = this.value || '結果發現全部都是空白';
+        });
+
+        // 4. 即時連動：文字顏色
+        textColorPicker.addEventListener('input', function() {
+            const selectedColor = this.value;
+            colorHexText.textContent = selectedColor.toUpperCase() + (selectedColor.toLowerCase() === '#ffffff' ? ' (預設白色)' : '');
+            topTextDisplay.style.color = selectedColor;
+            bottomTextDisplay.style.color = selectedColor;
+        });
+
+        // 5. 即時連動：字體大小
+        fontSizeRange.addEventListener('input', function() {
+            const size = this.value + 'px';
+            fontSizeValue.textContent = size;
+            topTextDisplay.style.fontSize = size;
+            bottomTextDisplay.style.fontSize = size;
+        });
+
+        // 6. 即時連動：上方文字垂直位置
+        topPosRange.addEventListener('input', function() {
+            const pos = this.value + '%';
+            topPosValue.textContent = pos;
+            topTextDisplay.style.top = pos;
+        });
+
+        // 7. 即時連動：下方文字垂直位置
+        bottomPosRange.addEventListener('input', function() {
+            const pos = this.value + '%';
+            bottomPosValue.textContent = pos;
+            bottomTextDisplay.style.top = pos;
+        });
+
+        // 8. 使用 html2canvas 下載迷因圖
+        downloadBtn.addEventListener('click', function() {
+            downloadBtn.textContent = '🔔 正在從百寶袋取出...';
+            downloadBtn.disabled = true;
+
+            html2canvas(memeContainer, {
+                useCORS: true,
+                scale: 2 // 提升輸出畫質
+            }).then(canvas => {
+                const imageURL = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.href = imageURL;
+                link.download = 'my-meme.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                downloadBtn.textContent = '🔔 取出百寶袋：下載迷因圖！';
+                downloadBtn.disabled = false;
+            }).catch(err => {
+                console.error('截圖失敗：', err);
+                alert('百寶袋故障了，請再試一次！');
+                downloadBtn.textContent = '🔔 取出百寶袋：下載迷因圖！';
+                downloadBtn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>

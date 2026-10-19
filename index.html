@@ -394,7 +394,7 @@
 <body>
 
     <div class="container">
-       
+        
         <!-- 1. 個人頭像與簡介區塊 -->
         <header class="profile-card">
             <div class="avatar-wrapper">
@@ -409,16 +409,16 @@
             <!-- 闖關統計徽章 -->
             <div class="progress-badge">
                 <i class="fa-solid fa-trophy"></i>
-                闖關進度：<span>2 / 16</span> 已解鎖
+                闖關進度：<span>4 / 16</span> 已解鎖
             </div>
         </header>
 
         <!-- 2. 16 個關卡作品集網格區塊 -->
         <main class="grid-section">
             <h2 class="grid-title">— Course Missions —</h2>
-           
+            
             <div class="mission-grid">
-               
+                
                 <!-- 【已解鎖】按鈕 1：Week 1 - 數位名片 -->
                 <a href="w1/index.html" class="mission-card unlocked">
                     <span class="week-tag">Week 01</span>
@@ -437,20 +437,25 @@
                     </div>
                 </a>
 
-                 <!-- 【已解鎖】按鈕 3：Week 3 - 迷音圖產生器 -->
+                <!-- 【已解鎖】按鈕 3：Week 3 - 迷音圖產生器 -->
                 <a href="w3/index.html" class="mission-card unlocked">
                     <span class="week-tag">Week 03</span>
                     <div class="mission-title">迷音圖產生器</div>
                     <div class="mission-status-icon">
-                        <i class="fa-solid fa-utensils"></i>
+                        <i class="fa-solid fa-image"></i>
                     </div>
                 </a>
-                <div class="mission-card locked" onclick="showLockedToast(4)">
-                    <span class="week-tag">Week 04</span>
-                    <div class="mission-title">未解鎖任務</div>
-                    <div class="mission-status-icon">🔒</div>
-                </div>
 
+                <!-- 【已解鎖】按鈕 4：Week 4 - 悄悄話 -->
+                <a href="w4/index.html" class="mission-card unlocked">
+                    <span class="week-tag">Week 04</span>
+                    <div class="mission-title">悄悄話</div>
+                    <div class="mission-status-icon">
+                        <i class="fa-solid fa-comment-dots"></i>
+                    </div>
+                </a>
+
+                <!-- 未解鎖卡片 5~16 -->
                 <div class="mission-card locked" onclick="showLockedToast(5)">
                     <span class="week-tag">Week 05</span>
                     <div class="mission-title">未解鎖任務</div>
@@ -546,13 +551,13 @@
         function showLockedToast(weekNum) {
             const toast = document.getElementById('toast');
             const toastText = document.getElementById('toast-text');
-           
+            
             // 更新提示文字
             toastText.textContent = `Week ${weekNum} 任務尚未開啟，持續努力解鎖吧！✨`;
-           
+            
             // 顯示提示
             toast.classList.add('show');
-           
+            
             // 若重複點擊，重設定時器
             if (toastTimer) {
                 clearTimeout(toastTimer);

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人數位名片</title>
+    <style>
+        /* 預設樣式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        /* 全螢幕背景與整體置中 */
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* 馬卡龍漸層背景：薄荷綠 -> 浪漫淡粉紅 */
+            background: linear-gradient(135deg, #e8f5e9 0%, #f3e5f5 50%, #fce4ec 100%);
+            padding: 20px;
+        }
+
+        /* 馬卡龍色系現代感卡片（帶有微陰影與毛玻璃效果） */
+        .profile-card {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 360px;
+            padding: 40px 28px;
+            border-radius: 28px;
+            text-align: center;
+            /* 柔和微陰影 */
+            box-shadow: 0 15px 35px rgba(230, 185, 205, 0.35), 
+                        0 5px 15px rgba(0, 0, 0, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* 卡片懸停時輕微上浮 */
+        .profile-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(220, 170, 195, 0.45);
+        }
+
+        /* 1. 圓形大頭貼外框與圖片 */
+        .avatar-wrapper {
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%; /* 正圓形 */
+            object-fit: cover;
+            border: 4px solid #ffffff;
+            box-shadow: 0 8px 18px rgba(225, 170, 190, 0.4);
+        }
+
+        /* 2. 名字與自我介紹 */
+        .name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4a4a4a;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .bio {
+            font-size: 14px;
+            color: #7a7a7a;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+
+        /* 3. 按鈕區域 */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 20px;
+            border-radius: 18px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        /* 馬卡龍草莓粉 - Instagram 按鈕 */
+        .btn-instagram {
+            background-color: #ffd1dc;
+            color: #8a3b50;
+        }
+
+        .btn-instagram:hover {
+            background-color: #ffb6c1;
+            box-shadow: 0 6px 16px rgba(255, 182, 193, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* 馬卡龍奶油黃 - Email 按鈕 */
+        .btn-email {
+            background-color: #fff0b3;
+            color: #735d00;
+        }
+
+        .btn-email:hover {
+            background-color: #ffe680;
+            box-shadow: 0 6px 16px rgba(255, 230, 128, 0.5);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <main class="profile-card">
+        <!-- 1. 圓形大頭貼照片 -->
+        <div class="avatar-wrapper">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop" alt="個人大頭貼" class="avatar">
+        </div>
+
+        <!-- 2. 姓名與簡短自我介紹 -->
+        <h1 class="name">林小巧</h1>
+        <p class="bio">✨ 熱愛生活與美學設計，用色彩記錄每個美好瞬間。</p>
+
+        <!-- 3. 下方兩個按鈕 (Instagram 和 Email) -->
+        <div class="button-group">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="btn btn-instagram">
+                <span class="icon">📸</span> Instagram
+            </a>
+            <a href="mailto:your-email@example.com" class="btn btn-email">
+                <span class="icon">✉️</span> Email Me
+            </a>
+        </div>
+    </main>
+
+</body>
+</html>

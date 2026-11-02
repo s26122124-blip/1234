@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今天吃什麼？ - 隨機抽籤機</title>
+    <style>
+        /* 基礎重置與字體設定 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            padding: 20px;
+        }
+
+        /* 主卡片容器 */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* 標籤小貼紙 */
+        .badge {
+            background-color: #ffe6e6;
+            color: #ff5252;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 50px;
+            letter-spacing: 1px;
+        }
+
+        /* 主標題 */
+        .main-title {
+            font-size: 32px;
+            color: #2c3e50;
+            font-weight: 800;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s ease;
+        }
+
+        /* 圖片容器 */
+        .image-container {
+            width: 100%;
+            height: 220px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 按鈕區域 */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: #ff5252;
+            color: white;
+            box-shadow: 0 6px 16px rgba(255, 82, 82, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: #ff3838;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 82, 82, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-success {
+            background-color: #2ed573;
+            color: white;
+            box-shadow: 0 6px 16px rgba(46, 213, 115, 0.3);
+        }
+
+        .btn-success:hover {
+            background-color: #26af5f;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4);
+        }
+
+        /* 隱藏元素類別 */
+        .hidden {
+            display: none !important;
+        }
+
+        /* 生動彈跳動畫 (Bounce) */
+        .bounce-animation {
+            animation: bounce 0.6s cubic-bezier(0.28, 0.84, 0.42, 1);
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <!-- 頂部標籤 -->
+        <span class="badge">美食抽籤機</span>
+
+        <!-- 主標題區塊 -->
+        <h1 id="title" class="main-title">今天吃什麼？</h1>
+
+        <!-- 圖片顯示區域 (預設隱藏) -->
+        <div id="image-container" class="image-container hidden">
+            <img id="food-image" src="" alt="美食照片">
+        </div>
+
+        <!-- 按鈕組 -->
+        <div class="button-group">
+            <button id="draw-btn" class="btn btn-primary">點我抽籤 🎲</button>
+            <a id="map-btn" class="btn btn-success hidden" href="#" target="_blank" rel="noopener noreferrer">馬上出發 🗺️</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. 餐廳與美食資料庫
+            const foodList = [
+                {
+                    name: "力晨早午餐",
+                    image: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=800&q=80"
+                },
+                {
+                    name: "聚",
+                    image: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=80"
+                },
+                {
+                    name: "噗噗熊早午餐",
+                    image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=800&q=80"
+                },
+                {
+                    name: "義大利麵",
+                    image: "https://images.unsplash.com/photo-1621996346565-e3d5d6281288?auto=format&fit=crop&w=800&q=80"
+                },
+                {
+                    name: "燴飯",
+                    image: "https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80"
+                }
+            ];
+
+            // 2. 獲取 HTML 元件
+            const title = document.getElementById('title');
+            const drawBtn = document.getElementById('draw-btn');
+            const mapBtn = document.getElementById('map-btn');
+            const imageContainer = document.getElementById('image-container');
+            const foodImage = document.getElementById('food-image');
+
+            let isRolling = false; // 避免快速重複點擊
+
+            // 3. 點擊抽籤按鈕事件
+            drawBtn.addEventListener('click', () => {
+                if (isRolling) return;
+                isRolling = true;
+
+                // 隱藏圖片與地圖按鈕，準備抽籤
+                imageContainer.classList.add('hidden');
+                mapBtn.classList.add('hidden');
+                title.classList.remove('bounce-animation');
+
+                let counter = 0;
+                const totalDuration = 15; // 滾動切換次數
+
+                // 拉霸機滾動效果
+                const timer = setInterval(() => {
+                    const randomIndex = Math.floor(Math.random() * foodList.length);
+                    title.textContent = foodList[randomIndex].name;
+                    counter++;
+
+                    // 當滾動結束時
+                    if (counter >= totalDuration) {
+                        clearInterval(timer);
+
+                        // 隨機選出最終美食
+                        const finalChoice = foodList[Math.floor(Math.random() * foodList.length)];
+                        
+                        // 替換大標題
+                        title.textContent = finalChoice.name;
+
+                        // 加上生動彈跳動畫
+                        title.classList.add('bounce-animation');
+
+                        // 顯示照片
+                        foodImage.src = finalChoice.image;
+                        imageContainer.classList.remove('hidden');
+
+                        // 設定 Google Map 搜尋連結並顯示「馬上出發」按鈕
+                        const googleMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(finalChoice.name)}`;
+                        mapBtn.href = googleMapUrl;
+                        mapBtn.classList.remove('hidden');
+
+                        isRolling = false;
+                    }
+                }, 80);
+            });
+        });
+    </script>
+</body>
+</html>
